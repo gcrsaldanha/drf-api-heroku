@@ -6,15 +6,15 @@ from agenda.models import Agendamento
 from agenda.serializers import AgendamentoSerializer
 
 # Create your views here.
-@api_view(http_method_names=["GET", "PUT"])
+@api_view(http_method_names=["GET", "PATCH"])
 def agendamento_detail(request, id):
     if request.method == "GET":
         obj = get_object_or_404(Agendamento, id=id)
         serializer = AgendamentoSerializer(obj)
         return JsonResponse(serializer.data)
-    if request.method == "PUT":
+    if request.method == "PATCH":
         obj = get_object_or_404(Agendamento, id=id) 
-        serializer = AgendamentoSerializer(data=request.data)
+        serializer = AgendamentoSerializer(data=request.data, partial=True)
         if serializer.is_valid():
             v_data = serializer.validated_data
             obj.data_horario = v_data.get("data_horario", obj.data_horario)
@@ -22,7 +22,7 @@ def agendamento_detail(request, id):
             obj.email_cliente = v_data.get("email_cliente", obj.email_cliente)
             obj.telefone_cliente = v_data.get("telefone_cliente", obj.telefone_cliente)
             obj.save()
-            return JsonResponse(serializer.data, status=200)
+            return JsonResponse(v_data, status=200)
         return JsonResponse(serializer.errors, status=400)
 
 
