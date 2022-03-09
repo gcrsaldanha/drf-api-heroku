@@ -14,8 +14,11 @@ from agenda.utils import get_horarios_disponiveis
 
 
 class AgendamentoList(generics.ListCreateAPIView):  # /api/agendamentos/
-    queryset = Agendamento.objects.all()
     serializer_class = AgendamentoSerializer
+
+    def get_queryset(self):
+        username = self.request.query_params.get("username", None)
+        return Agendamento.objects.filter(prestador__username=username)  # Se não for passado username, não retorna nada.
 
 
 class AgendamentoDetail(generics.RetrieveUpdateDestroyAPIView):  # /api/agendamentos/<pk>/

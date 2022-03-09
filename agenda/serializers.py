@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
 from django.utils import timezone
 
@@ -7,7 +8,7 @@ from agenda.models import Agendamento
 class AgendamentoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Agendamento
-        fields = ['id', 'data_horario', 'nome_cliente', 'email_cliente', 'telefone_cliente']
+        fields = '__all__'
 
     def validate_data_horario(self, value):
         if value < timezone.now():
