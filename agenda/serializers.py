@@ -10,6 +10,15 @@ class AgendamentoSerializer(serializers.ModelSerializer):
         model = Agendamento
         fields = '__all__'
 
+    prestador = serializers.CharField()
+
+    def validate_prestador(self, value):
+        try:
+            prestador_obj = User.objects.get(username=value)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("username não existe!")
+        return prestador_obj
+
     def validate_data_horario(self, value):
         if value < timezone.now():
             raise serializers.ValidationError("Agendamento não pode ser feito no passado!")
