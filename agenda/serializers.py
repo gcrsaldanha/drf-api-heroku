@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.db.models.query import QuerySet
 from rest_framework import serializers
 from django.utils import timezone
 
@@ -31,3 +32,12 @@ class AgendamentoSerializer(serializers.ModelSerializer):
         if email_cliente.endswith(".br") and telefone_cliente.startswith("+") and not telefone_cliente.startswith("+55"):
             raise serializers.ValidationError("E-mail brasileiro deve estar associado a um número do Brasil (+55)")
         return attrs
+        
+
+class PrestadorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'agendamentos']
+
+    # agendamentos = serializers.PrimaryKeyRelatedField(many=True, queryset=Agendamento.objects.all())
+    agendamentos = AgendamentoSerializer(many=True, read_only=True)
