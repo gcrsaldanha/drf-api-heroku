@@ -40,13 +40,17 @@ class AgendamentoList(generics.ListCreateAPIView):  # /api/agendamentos/
 
     def get_queryset(self):
         username = self.request.query_params.get("username", None)
-        return Agendamento.objects.filter(prestador__username=username)  # Se não for passado username, não retorna nada.
+        return Agendamento.objects.filter(prestador__username=username, cancelado=False)  # Se não for passado username, não retorna nada.
 
 
 class AgendamentoDetail(generics.RetrieveUpdateDestroyAPIView):  # /api/agendamentos/<pk>/
     queryset = Agendamento.objects.all()
     serializer_class = AgendamentoSerializer
     permission_classes = [IsOwner]
+
+    def perform_destroy(self, instance):
+        instance.cancelado = True
+        instance.save()
 
 
 class PrestadorList(generics.ListAPIView):

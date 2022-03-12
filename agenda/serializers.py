@@ -12,6 +12,7 @@ class AgendamentoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     prestador = serializers.CharField()
+    cancelado = serializers.BooleanField(read_only=True)
 
     def validate_prestador(self, value):
         try:
@@ -28,6 +29,9 @@ class AgendamentoSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         telefone_cliente = attrs.get("telefone_cliente", "")
         email_cliente = attrs.get("email_cliente", "")
+        data = attrs.get("data_horario").date()
+        if Agendamento.objects.filter(email_cliente=email_cliente, data_horario__date=data).exists():
+            raise serializers.ValidationError("Já existe um agendamento para esse cliente nessa data")
 
         if email_cliente.endswith(".br") and telefone_cliente.startswith("+") and not telefone_cliente.startswith("+55"):
             raise serializers.ValidationError("E-mail brasileiro deve estar associado a um número do Brasil (+55)")
