@@ -1,8 +1,8 @@
 from datetime import datetime
-from django.http import JsonResponse
 from django.contrib.auth.models import User
 from rest_framework.decorators import api_view
 from rest_framework import generics, permissions
+from rest_framework.response import Response
 
 from agenda.models import Agendamento
 from agenda.serializers import AgendamentoSerializer, PrestadorSerializer
@@ -67,4 +67,4 @@ def get_horarios(request):
         data = datetime.fromisoformat(data).date()
     
     horarios_disponiveis = sorted(list(get_horarios_disponiveis(data)))
-    return JsonResponse(horarios_disponiveis, safe=False)
+    return Response(horarios_disponiveis)
