@@ -22,7 +22,7 @@ class TestListagemAgendamentos(AgendamentoAPITestCase):
 
     def test_listagem_de_agendamentos_criados(self):
         Agendamento.objects.create(
-            data_horario=datetime(2022, 3, 15, 9, tzinfo=timezone.utc),
+            data_horario=datetime(2023, 3, 15, 9, tzinfo=timezone.utc),
             nome_cliente="Alice",
             email_cliente="alice@email.com",
             telefone_cliente="99998888",
@@ -31,7 +31,7 @@ class TestListagemAgendamentos(AgendamentoAPITestCase):
 
         agendamento_serializado = {
             "id": 1,
-            "data_horario": "2022-03-15T09:00:00Z",
+            "data_horario": "2023-03-15T09:00:00Z",
             "nome_cliente": "Alice",
             "email_cliente": "alice@email.com",
             "telefone_cliente": "99998888",
@@ -48,7 +48,7 @@ class TestCriacaoAgendamento(AgendamentoAPITestCase):
     def test_cria_agendamento(self):
         agendamento_request_data = {
             "prestador": "seuze",
-            "data_horario": "2022-03-15T09:00:00Z",
+            "data_horario": "2023-03-15T09:00:00Z",
             "nome_cliente": "Alice",
             "email_cliente": "alice@email.com",
             "telefone_cliente": "99998888",
@@ -58,13 +58,13 @@ class TestCriacaoAgendamento(AgendamentoAPITestCase):
         self.assertEqual(response.status_code, 201)
 
         agendamento_criado = Agendamento.objects.get()
-        self.assertEqual(agendamento_criado.data_horario, datetime(2022, 3, 15, 9, tzinfo=timezone.utc))
+        self.assertEqual(agendamento_criado.data_horario, datetime(2023, 3, 15, 9, tzinfo=timezone.utc))
         self.assertEqual(agendamento_criado.prestador, self.seuze)
 
     def test_cancela_agendamento(self):
         agendamento_request_data = {
             "prestador": "seuze",
-            "data_horario": "2022-03-15T09:00:00Z",
+            "data_horario": "2023-03-15T09:00:00Z",
             "nome_cliente": "Alice",
             "email_cliente": "alice@email.com",
             "telefone_cliente": "99998888",
