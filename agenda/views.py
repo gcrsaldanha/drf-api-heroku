@@ -1,12 +1,14 @@
+import csv
 from datetime import datetime
 from django.contrib.auth.models import User
-from rest_framework.decorators import api_view
+from django.http.response import HttpResponse
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 
 from agenda.models import Agendamento
 from agenda.serializers import AgendamentoSerializer, PrestadorSerializer
-from agenda.utils import get_horarios_disponiveis
+from agenda.utils import gera_relatorio_prestadores, get_horarios_disponiveis
 
 
 class IsOwnerOrCreateOnly(permissions.BasePermission):
@@ -52,10 +54,23 @@ class AgendamentoDetail(generics.RetrieveUpdateDestroyAPIView):  # /api/agendame
         instance.cancelado = True
         instance.save()
 
-
-class PrestadorList(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = PrestadorSerializer
+@api_view(http_method_names=["GET"])
+@permission_classes([permissions.IsAdminUser])
+def get_relatorio_prestadores(request):
+    prestadores = User.objects.all()
+    serializer = PrestadorSerializer(prestadores, many=True)
+    if request.query_params.get("formato") == "csv":
+        # https://docs.python.org/3/library/csv.html
+        # https://docs.djangoproject.com/en/4.0/howto/outputting-csv/#using-the-python-csv-library
+        response = HttpResponse(
+            content_type='text/csv',
+            headers={'Content-Disposition': f'attachment; filename="relatorio_{datetime.utcnow().strftime("%Y-%m-%d_%H:%M:%S")}.csv"'},
+        )
+        gera_relatorio_prestadores(response, serializer.data)
+        # Acessar essa API pelo navegar: vai iniciar o download
+        return response
+    else:
+        return Response(serializer.data)
 
 
 @api_view(http_method_names=["GET"])
