@@ -125,7 +125,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
+TESTING = False
 
 LOGGING = {  # DictConfig schema: https://docs.python.org/3/library/logging.config.html#configuration-dictionary-schema
     'version': 1,  # Versão do schema atual
