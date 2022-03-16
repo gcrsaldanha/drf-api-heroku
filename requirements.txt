@@ -4,10 +4,13 @@ certifi==2021.10.8
 charset-normalizer==2.0.12
 Django==4.0.2
 djangorestframework==3.13.1
+django-heroku==0.0.0
+gunicorn==20.1.0
 idna==3.3
 iniconfig==1.1.1
 packaging==21.3
 pluggy==1.0.0
+psycopg2==2.9.3
 py==1.11.0
 pyparsing==3.0.7
 python-dotenv==0.19.2
