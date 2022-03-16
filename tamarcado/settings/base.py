@@ -147,10 +147,9 @@ LOGGING = {  # DictConfig schema: https://docs.python.org/3/library/logging.conf
             'formatter': 'console'
         },
         'file': {
-            'level': 'WARN',  # Level de log para o handler "file"
             'class': 'logging.FileHandler',
             'formatter': 'file',
-            'filename': '/tmp/debug.log'
+            'filename': 'app.log'  # Onde o arquivo de log vai ser salvo
         }
     },
     'loggers': {
