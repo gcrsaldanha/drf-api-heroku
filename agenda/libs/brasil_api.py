@@ -2,6 +2,7 @@ import json
 import requests
 from datetime import date
 from django.conf import settings
+import logging
 
 
 def is_feriado(date: date):
@@ -14,7 +15,10 @@ def is_feriado(date: date):
     ano = date.year
     r = requests.get(f"https://brasilapi.com.br/api/feriados/v1/{ano}")
     if not r.status_code == 200:
-        raise ValueError("Problema ao buscar feriados nacionais")
+        # Para não impedir que usuários possam realizar a marcação, eu assumo que
+        # essa data NÃO é um feriado em caso de erro, e faço um log do que aconteceu.
+        logging.error(f"Brasil API retornou status_code: {r.status_code}")
+        return False
 
     feriados = json.loads(r.text)
     for feriado in feriados:
