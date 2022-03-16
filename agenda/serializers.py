@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db.models.query import QuerySet
 from rest_framework import serializers
 from django.utils import timezone
+from rest_framework.validators import UniqueValidator
 
 from agenda.models import Agendamento
 from agenda import utils
@@ -49,3 +50,11 @@ class PrestadorSerializer(serializers.ModelSerializer):
 
     # agendamentos = serializers.PrimaryKeyRelatedField(many=True, queryset=Agendamento.objects.all())
     agendamentos = AgendamentoSerializer(many=True, read_only=True)
+
+
+class SignUpUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password']
+
+    email = serializers.EmailField(validators=[UniqueValidator(queryset=User.objects.all())])

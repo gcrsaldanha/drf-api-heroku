@@ -7,7 +7,7 @@ from rest_framework import generics, permissions
 from rest_framework.response import Response
 
 from agenda.models import Agendamento
-from agenda.serializers import AgendamentoSerializer, PrestadorSerializer
+from agenda.serializers import AgendamentoSerializer, PrestadorSerializer, SignUpUserSerializer
 from agenda.utils import gera_relatorio_prestadores, get_horarios_disponiveis
 
 
@@ -80,6 +80,18 @@ def get_horarios(request):
         data = datetime.now().date()
     else:
         data = datetime.fromisoformat(data).date()
-    
+
     horarios_disponiveis = sorted(list(get_horarios_disponiveis(data)))
     return Response(horarios_disponiveis)
+
+
+@api_view(http_method_names=["POST"])
+def signup(request):
+    serializer = SignUpUserSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    User.objects.create_user(
+        email=serializer.data["email"],
+        username=serializer.data["username"],
+        password=serializer.data["password"],
+    )
+    return Response(status=201)
