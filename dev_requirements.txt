@@ -1,4 +1,4 @@
--r common.txt
+-r requirements.txt
 coverage==6.3.2
 pytest==7.1.0
 pytest-cov==3.0.0
