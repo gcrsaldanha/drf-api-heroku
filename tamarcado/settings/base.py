@@ -14,8 +14,6 @@ import os
 from pathlib import Path
 import sys
 from dotenv import load_dotenv
-import django_heroku
-
 load_dotenv()  # take environment variables from .env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -119,17 +117,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.0/howto/static-files/
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-# STATIC_URL = '/static/'
-
-# # Extra places for collectstatic to find static files.
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, 'static'),
-# )
-
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
@@ -161,10 +148,8 @@ LOGGING = {  # DictConfig schema: https://docs.python.org/3/library/logging.conf
     },
     'loggers': {
         '': {  # '' representa o logger "raíz" (root). Todos "loggers" herdarão dele.
-            'level': 'WARN',
+            'level': os.environ.get('DJANGO_LOG_LEVEL', 'WARN'),
             'handlers': ['console', 'file']
         }
     }
 }
-
-django_heroku.settings(locals())
