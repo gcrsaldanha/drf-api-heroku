@@ -83,15 +83,3 @@ def get_horarios(request):
 
     horarios_disponiveis = sorted(list(get_horarios_disponiveis(data)))
     return Response(horarios_disponiveis)
-
-
-@api_view(http_method_names=["POST"])
-def signup(request):
-    serializer = SignUpUserSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    User.objects.create_user(
-        email=serializer.data["email"],
-        username=serializer.data["username"],
-        password=serializer.data["password"],
-    )
-    return Response(status=201)
