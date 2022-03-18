@@ -83,3 +83,8 @@ def get_horarios(request):
 
     horarios_disponiveis = sorted(list(get_horarios_disponiveis(data)))
     return Response(horarios_disponiveis)
+
+
+@api_view(http_method_names=["GET"])
+def healthcheck(request):
+    return Response({"status": "OK"}, status=200)
