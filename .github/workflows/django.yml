@@ -26,8 +26,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements/dev.txt
     - name: Run Tests
+      run: |
+        pwd
+        cat tamarcado/settings/testing.py
+        ls
+        pytest
       env:
         SECRET_KEY: dummy-for-tests
-        DJANGO_SETTINGS_MODULE: tamarcado/settings/testing.py
-      run: |
-        pytest
