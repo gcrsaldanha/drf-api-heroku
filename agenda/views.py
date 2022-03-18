@@ -85,6 +85,6 @@ def get_horarios(request):
     return Response(horarios_disponiveis)
 
 
-@api_view
+@api_view(http_method_names=["GET"])
 def index(request):
     return Response({"health": "OK"}, status=200)
