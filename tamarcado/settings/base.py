@@ -155,3 +155,7 @@ LOGGING = {  # DictConfig schema: https://docs.python.org/3/library/logging.conf
         }
     }
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = '0.0.0.0'
+EMAIL_PORT = '1025'
