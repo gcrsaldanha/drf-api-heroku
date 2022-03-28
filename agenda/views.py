@@ -8,7 +8,8 @@ from rest_framework.response import Response
 
 from agenda.models import Agendamento
 from agenda.serializers import AgendamentoSerializer, PrestadorSerializer, SignUpUserSerializer
-from agenda.utils import gera_relatorio_prestadores, get_horarios_disponiveis
+from agenda.utils import get_horarios_disponiveis
+from agenda.tasks import gera_relatorio_prestadores
 
 
 class IsOwnerOrCreateOnly(permissions.BasePermission):
@@ -57,19 +58,12 @@ class AgendamentoDetail(generics.RetrieveUpdateDestroyAPIView):  # /api/agendame
 @api_view(http_method_names=["GET"])
 @permission_classes([permissions.IsAdminUser])
 def get_relatorio_prestadores(request):
-    prestadores = User.objects.all()
-    serializer = PrestadorSerializer(prestadores, many=True)
     if request.query_params.get("formato") == "csv":
-        # https://docs.python.org/3/library/csv.html
-        # https://docs.djangoproject.com/en/4.0/howto/outputting-csv/#using-the-python-csv-library
-        response = HttpResponse(
-            content_type='text/csv',
-            headers={'Content-Disposition': f'attachment; filename="relatorio_{datetime.utcnow().strftime("%Y-%m-%d_%H:%M:%S")}.csv"'},
-        )
-        gera_relatorio_prestadores(response, serializer.data)
-        # Acessar essa API pelo navegar: vai iniciar o download
-        return response
+        result = gera_relatorio_prestadores.delay()  # AsyncResult(task_id="abc1231")
+        return Response({"task_id": result.task_id})
     else:
+        prestadores = User.objects.all()
+        serializer = PrestadorSerializer(prestadores, many=True)
         return Response(serializer.data)
 
 
