@@ -37,8 +37,8 @@ def gera_relatorio_prestadores():
     email = EmailMessage(
         'tamarcado - Relatório de prestadores',
         'Em anexo o relatório solicitado.',
-        'docs@codar.me',
-        ['admin@example.com'],
+        'gabrielcrsaldanha@gmail.com',
+        ['gcrsaldanha@gmail.com'],
     )
     email.attach("relatorio.csv", output.getvalue(), "text/csv")
     email.send()
