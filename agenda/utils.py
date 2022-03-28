@@ -28,22 +28,22 @@ def get_horarios_disponiveis(data: date) -> Iterable[datetime]:
 
 
 def gera_relatorio_prestadores(output, prestadores_data):
-        writer = csv.writer(output)
-        writer.writerow([
-            "prestador",
-            "data_horario",
-            "nome_cliente",
-            "email_cliente",
-            "telefone_cliente",
-            "cancelado",
-        ])
-        for prestador in prestadores_data:
-            for agendamento in prestador["agendamentos"]:
-                writer.writerow([
-                    agendamento["prestador"],
-                    agendamento["data_horario"],
-                    agendamento["nome_cliente"],
-                    agendamento["email_cliente"],
-                    agendamento["telefone_cliente"],
-                    agendamento["cancelado"],
-                ])
+    writer = csv.writer(output)
+    writer.writerow([
+        "prestador",
+        "data_horario",
+        "nome_cliente",
+        "email_cliente",
+        "telefone_cliente",
+        "cancelado",
+    ])
+    for prestador in prestadores_data:
+        for agendamento in prestador["agendamentos"]:
+            writer.writerow([
+                agendamento["prestador"],
+                agendamento["data_horario"],
+                agendamento["nome_cliente"],
+                agendamento["email_cliente"],
+                agendamento["telefone_cliente"],
+                agendamento["cancelado"],
+            ])
