@@ -1,0 +1,54 @@
+# Baseado no exemplo do site EditorConfig: https://EditorConfig.org
+# Alguns editores têm integração nativa com EditorConfig. VSCode não é um deles.
+# Plugin VSCode: https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig
+
+
+# Arquivo EditorConfig raíz
+# Podemos ter mais de um por projeto (para pastas específicas),
+# mas não é muito comum.
+root = true
+
+
+[*]  # Match em todos os arquivos
+end_of_line = lf  # Quebra de linha de sistema Unix (LF – Line Feed – \n)
+# Outras opções: crlf (Mac), cr (Windows \r)
+insert_final_newline = true  # Boa prática: toda linha deve terminar com uma quebra de linha
+
+
+[*.{js,py,md}]  # Match em qualquer arquivo com essas extensões
+charset = utf-8  # charset padrão
+
+
+[*.py]  # Match apenas em arquivos .py.
+# PRIORIDADE é top-down! Não pela regra mais específica.
+# Ou seja, a regra definida por último tem prioridade.
+indent_style = space
+indent_size = 4
+
+
+[*.js]
+indent_style = space
+indent_size = 2  # Para JavaScript vamos definir apenas 2 espaços de indentação.
+
+[*.md]
+indent_style = space
+indent_size = 2 
+
+
+# Tab indentation (no size specified)
+[Procfile]
+indent_style = tab  # Usar o caracter tabulação (\t) para indentação em arquivos Makefile.
+# Mesmo que a gente aperte TAB em um arquivo .py, na verdade, vai inserir ESPAÇOS.
+# Não precisamos especificar o tamanho da indentação. Ou seja, será mantido como está ou como definido pelo editor.
+
+
+# Podemos sobrescrever arquivos em uma pasta específica
+[lib/**.js]  # /**.js => recursivo, ou seja, qualquer arquivo *.js em qualquer subdiretório de lib/
+indent_style = space
+indent_size = 2
+
+
+# Arquivos específicos:
+[{django.yml, pytest.ini}]
+indent_style = space
+indent_size = 2
