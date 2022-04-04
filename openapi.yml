@@ -1,0 +1,164 @@
+openapi: 3.0.0
+servers:
+  - url: 'https://staging.tamarcado.com/api'
+    description: 'Staging'
+  - url: 'https://tamarcado.com/api'
+    description: 'Production'
+info:
+  description: API de Agendamentos
+  version: "1.0.0"
+  title: Tamarcado API
+  contact:
+    email: gabriel@codar.me
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: agendamento
+    description: Operações disponíveis para manipulação de agendamentos
+  - name: admin
+    description: Operações disponíveis apenas para administradores
+paths:
+  /agendamentos:
+    get:
+      tags:
+        - agendamento
+      summary: listagem de agendamentos
+      operationId: AgendamentoList
+      description: Busca de agendamentos para um determinado usuário.
+      parameters:
+        - in: query
+          name: username
+          description: nome do usuário
+          schema:
+            type: string
+            example: gabriel
+      responses:
+        '200':
+          description: lista de agendamentos do usuário
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - prestador
+                    - cancelado
+                    - data_horario
+                    - nome_cliente
+                    - email_cliente
+                    - telefone_cliente
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    prestador:
+                      type: string
+                      example: gabriel
+                    cancelado:
+                      type: boolean
+                      example: false
+                    data_horario:
+                      type: string
+                      format: date-time
+                      example: '2022-03-20T09:23:11Z'
+                    nome_cliente:
+                      type: string
+                      example: Isadora
+                    email_cliente:
+                      type: string
+                      example: 'cliente@email.com'
+                    telefone_cliente:
+                      type: string
+                      example: '(21) 2722-2003'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: 'Authentication credentials were not provided.'
+    post:
+      tags:
+        - agendamento
+      summary: cria um novo agendamento
+      operationId: AgendamentoCreate
+      description: Cria um novo agendamento
+      responses:
+        '201':
+          description: item created
+        '400':
+          description: 'invalid input, object invalid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Agendamento'
+        description: Informações de agendamento a ser criado
+  /agendamentos/{agendamento_pk}:
+    get:
+      tags:
+        - agendamento
+      summary: detalhes de agendamento
+      operationId: AgendamentoDetail
+      parameters:
+        - in: path
+          name: agendamento_pk
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: detalhe do agendamento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agendamento'
+      
+components:
+  schemas:
+    Agendamento:
+      type: object
+      required:
+        - prestador
+        - cancelado
+        - data_horario
+        - nome_cliente
+        - email_cliente
+        - telefone_cliente
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 1
+        prestador:
+          type: string
+          example: gabriel
+        cancelado:
+          type: boolean
+          example: false
+        data_horario:
+          type: string
+          format: date-time
+          example: '2022-03-20T09:23:11Z'
+        nome_cliente:
+          type: string
+          example: Isadora
+        email_cliente:
+          type: string
+          example: 'cliente@email.com'
+        telefone_cliente:
+          type: string
+          example: '(21) 2722-2003'
+        # manufacturer:
+        #   $ref: '#/components/schemas/Manufacturer'
+    Prestador:
+      required:
+        - id
+        - username
+        - agendamentos
