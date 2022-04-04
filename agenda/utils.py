@@ -7,11 +7,13 @@ from agenda.models import Agendamento
 
 
 def get_horarios_disponiveis(data: date) -> Iterable[datetime]:
+    """
+    Verifica os horários disponíveis para uma determinada data.
+
+    Caso a data passada seja um feriado, nenhum horário disponível é retornado. Para essa consulta
+    é utilizada a API de feriados através da função `brasil_api`
+    """
     # TODO: como melhorar a performance desse programa? Análise de complexidade?
-    """
-    Retorna uma lista com objetos do tipo datetime cujas datas são o mesmo dia passado (data)
-    e os horários são os horários disponíveis para aquele dia, conforme outros agendamentos existam.
-    """
     if brasil_api.is_feriado(data):
         return []
 
