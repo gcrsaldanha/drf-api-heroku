@@ -58,8 +58,7 @@ class AgendamentoDetail(
 ):  # /api/agendamentos/<pk>/
     queryset = Agendamento.objects.all()
     serializer_class = AgendamentoSerializer
-    permission_classes = [
-        IsOwner,
+    permission_classes = [IsOwner,
     ]
 
     def perform_destroy(self, instance):
