@@ -1,6 +1,7 @@
 #  Test Coverage
 import unittest
 
+
 def dividir(a, b):
     if b == 0:
         return None
@@ -17,6 +18,7 @@ class TestDividir(unittest.TestCase):
 
     def test_divisao_nao_inteira(self):
         self.assertEqual(dividir(5, 2), 2.5)
+
 
 if __name__ == "__main__":
     unittest.main()

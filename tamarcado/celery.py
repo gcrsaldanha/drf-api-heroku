@@ -1,10 +1,10 @@
 from celery import Celery
 import os
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tamarcado.settings.dev')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tamarcado.settings.dev")
 
-app = Celery('tamarcado')
-app.config_from_object('django.conf:settings', namespace='CELERY')
+app = Celery("tamarcado")
+app.config_from_object("django.conf:settings", namespace="CELERY")
 
 
 app.autodiscover_tasks()
@@ -13,5 +13,6 @@ app.autodiscover_tasks()
 @app.task
 def soma(a, b):
     import time
+
     time.sleep(10)
     return a + b

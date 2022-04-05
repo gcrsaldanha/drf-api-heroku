@@ -6,12 +6,16 @@ from datetime import datetime, time, timezone
 from agenda.models import Agendamento
 from django.contrib.auth.models import User
 
+
 class AgendamentoAPITestCase(APITestCase):
     def setUp(self) -> None:
-        self.seuze = User.objects.create_user(email="seuze@email.com", username="seuze", password="123")
+        self.seuze = User.objects.create_user(
+            email="seuze@email.com", username="seuze", password="123"
+        )
         self.client.login(username="seuze", password="123")
 
         return super().setUp()
+
 
 # Create your tests here.
 class TestListagemAgendamentos(AgendamentoAPITestCase):
@@ -58,9 +62,11 @@ class TestCriacaoAgendamento(AgendamentoAPITestCase):
         assert response.status_code == 201
 
         agendamento_criado = Agendamento.objects.get()
-        assert agendamento_criado.data_horario ==  datetime(2023, 3, 15, 9, tzinfo=timezone.utc)
+        assert agendamento_criado.data_horario == datetime(
+            2023, 3, 15, 9, tzinfo=timezone.utc
+        )
         assert agendamento_criado.prestador == self.seuze
-    
+
     def test_cria_agendamento_no_passado_retorna_400(self):
         agendamento_request_data = {
             "prestador": "seuze",
@@ -88,7 +94,9 @@ class TestCriacaoAgendamento(AgendamentoAPITestCase):
         agendamento_criado = Agendamento.objects.get()
         assert agendamento_criado.cancelado == False
 
-        response = self.client.delete(f"/api/agendamentos/{agendamento_criado.pk}/", agendamento_request_data)
+        response = self.client.delete(
+            f"/api/agendamentos/{agendamento_criado.pk}/", agendamento_request_data
+        )
         assert response.status_code == 204
 
         agendamento_criado.refresh_from_db()
@@ -110,6 +118,8 @@ class TestGetHorarios(AgendamentoAPITestCase):
         # api_mock.is_feriado.return_value = False
         response = self.client.get("/api/horarios/?data=2022-01-02")
         assert response.status_code, 200
-        assert not len(response.data) == 0, "Lista vazia!"  # Pra evitar dar out of index error na linha abaixo
+        assert (
+            not len(response.data) == 0
+        ), "Lista vazia!"  # Pra evitar dar out of index error na linha abaixo
         assert response.data[0] == datetime(2022, 1, 2, 9, 0, 0, tzinfo=timezone.utc)
         assert response.data[-1] == datetime(2022, 1, 2, 17, 30, 0, tzinfo=timezone.utc)

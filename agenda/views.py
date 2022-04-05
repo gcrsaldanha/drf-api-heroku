@@ -1,15 +1,20 @@
 import csv
 from datetime import datetime
+
 from django.contrib.auth.models import User
 from django.http.response import HttpResponse
-from rest_framework.decorators import api_view, permission_classes
 from rest_framework import generics, permissions
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
 from agenda.models import Agendamento
-from agenda.serializers import AgendamentoSerializer, PrestadorSerializer, SignUpUserSerializer
-from agenda.utils import get_horarios_disponiveis
+from agenda.serializers import (
+    AgendamentoSerializer,
+    PrestadorSerializer,
+    SignUpUserSerializer,
+)
 from agenda.tasks import gera_relatorio_prestadores
+from agenda.utils import get_horarios_disponiveis
 
 
 class IsOwnerOrCreateOnly(permissions.BasePermission):
@@ -35,7 +40,7 @@ class IsOwner(permissions.BasePermission):
         if obj.prestador == request.user:
             return True
         return False
-    
+
 
 class AgendamentoList(generics.ListCreateAPIView):  # /api/agendamentos/
     serializer_class = AgendamentoSerializer
@@ -43,10 +48,14 @@ class AgendamentoList(generics.ListCreateAPIView):  # /api/agendamentos/
 
     def get_queryset(self):
         username = self.request.query_params.get("username", None)
-        return Agendamento.objects.filter(prestador__username=username, cancelado=False)  # Se não for passado username, não retorna nada.
+        return Agendamento.objects.filter(
+            prestador__username=username, cancelado=False
+        )  # Se não for passado username, não retorna nada.
 
 
-class AgendamentoDetail(generics.RetrieveUpdateDestroyAPIView):  # /api/agendamentos/<pk>/
+class AgendamentoDetail(
+    generics.RetrieveUpdateDestroyAPIView
+):  # /api/agendamentos/<pk>/
     queryset = Agendamento.objects.all()
     serializer_class = AgendamentoSerializer
     permission_classes = [IsOwner]
@@ -54,6 +63,7 @@ class AgendamentoDetail(generics.RetrieveUpdateDestroyAPIView):  # /api/agendame
     def perform_destroy(self, instance):
         instance.cancelado = True
         instance.save()
+
 
 @api_view(http_method_names=["GET"])
 @permission_classes([permissions.IsAdminUser])
@@ -75,13 +85,11 @@ def get_horarios(request):
     else:
         data = datetime.fromisoformat(data).date()
 
+    get_horarios
     horarios_disponiveis = sorted(list(get_horarios_disponiveis(data)))
     return Response(horarios_disponiveis)
 
 
 @api_view(http_method_names=["GET"])
 def healthcheck(request):
-    return Response({
-        "status": "OK",
-        "message": "Deployado!"
-    }, status=200)
+    return Response({"status": "OK", "message": "Deployado!"}, status=200)
