@@ -31,3 +31,6 @@ jobs:
         DJANGO_SETTINGS_MODULE: tamarcado.settings.testing
       run: |
         pytest
+    - name: Run Black
+      run: |
+        black --check .
